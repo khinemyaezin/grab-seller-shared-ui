@@ -1,0 +1,21 @@
+{
+  "name": "@grab/seller-api",
+  "version": "0.1.0",
+  "type": "module",
+  "files": ["dist"],
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": { "url-template": "^3.1.1" },
+  "devDependencies": {
+    "@types/url-template": "^3.0.0",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3",
+    "msw": "^2.14.6",
+    "vitest": "^4.1.9"
+  },
+  "publishConfig": { "access": "restricted" }
+}

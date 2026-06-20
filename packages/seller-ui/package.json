@@ -1,0 +1,38 @@
+{
+  "name": "@grab/seller-ui",
+  "version": "0.1.0",
+  "type": "module",
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./components/*": { "types": "./dist/components/ui/*.d.ts", "import": "./dist/components/ui/*.js" },
+    "./layout/*": { "types": "./dist/components/layout/*.d.ts", "import": "./dist/components/layout/*.js" },
+    "./styles.css": "./dist/styles.css"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json && cp src/styles.css dist/styles.css",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@grab/seller-api": "file:../seller-api",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^1.8.0",
+    "lodash": "^4.18.1",
+    "radix-ui": "^1.4.3",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0"
+  },
+  "peerDependencies": { "react": "^19.2.4", "react-dom": "^19.2.4" },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/lodash": "^4.17.24",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": { "access": "restricted" }
+}
