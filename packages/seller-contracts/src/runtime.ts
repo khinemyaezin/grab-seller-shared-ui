@@ -11,7 +11,7 @@ export const defaultRuntimeConfig: Readonly<SellerRuntimeConfig> = {
   appName: "Grab Store",
   apiBaseUrl: "/api",
   remotes: {
-    productManifest: "/mfe/product/mf-manifest.json",
-    inventoryManifest: "/mfe/inventory/mf-manifest.json",
+    productManifest: "/mfe/grab-seller-product/mf-manifest.json",
+    inventoryManifest: "/mfe/grab-seller-inventory/mf-manifest.json",
   },
 };
