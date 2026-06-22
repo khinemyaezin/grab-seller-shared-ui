@@ -18,5 +18,8 @@
     "msw": "^2.14.6",
     "vitest": "^4.1.9"
   },
-  "publishConfig": { "access": "restricted" }
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  }
 }

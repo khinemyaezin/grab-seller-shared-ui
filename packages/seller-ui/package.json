@@ -35,5 +35,8 @@
     "tsc-alias": "^1.8.16",
     "typescript": "^5.9.3"
   },
-  "publishConfig": { "access": "restricted" }
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com"
+  }
 }

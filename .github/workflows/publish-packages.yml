@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   publish:
@@ -18,7 +19,7 @@ jobs:
         with:
           node-version: 20.19.0
           cache: npm
-          registry-url: https://registry.npmjs.org
+          registry-url: https://npm.pkg.github.com
           scope: '@grab'
 
       - name: Install dependencies
@@ -30,4 +31,4 @@ jobs:
       - name: Publish packages
         run: npm run publish:packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
