@@ -7,7 +7,7 @@
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "release:check": "npm run typecheck && npm test && npm run build && npm_config_cache=.npm-cache npm pack --workspaces --dry-run",
+    "release:check": "npm run build && npm run typecheck && npm test && npm_config_cache=.npm-cache npm pack --workspaces --dry-run",
     "publish:packages": "npm publish --workspace @grab/seller-api && npm publish --workspace @grab/seller-contracts && npm publish --workspace @grab/seller-ui"
   },
   "engines": { "node": ">=20.19.0" }
