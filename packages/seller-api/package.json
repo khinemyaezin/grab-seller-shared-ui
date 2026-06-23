@@ -1,16 +1,25 @@
 {
   "name": "@khinemyaezin/seller-api",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
-  "files": ["dist"],
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --exclude 'dist/**'"
   },
-  "dependencies": { "url-template": "^3.1.1" },
+  "dependencies": {
+    "url-template": "^3.1.1"
+  },
   "devDependencies": {
     "@types/url-template": "^3.0.0",
     "tsc-alias": "^1.8.16",
