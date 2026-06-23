@@ -1,2 +1,1 @@
-export * from "./link-resolver";
-export * from "./link-relations";
+export * from "./link-resolver.js";
