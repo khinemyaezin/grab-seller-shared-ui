@@ -4,6 +4,5 @@ export type SellerRuntimeConfig = {
 };
 
 export const defaultRuntimeConfig: Readonly<SellerRuntimeConfig> = {
-  appName: "Grab Store",
   apiBaseUrl: "/api"
 };
