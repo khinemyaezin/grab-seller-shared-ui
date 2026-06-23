@@ -1,6 +1,11 @@
 export const routes = {
   home: "/",
   login: "/login",
+  register: "/register",
+  admin: {
+    users: "/admin/users",
+    editUser: (userId:string) => `/admin/users/${userId}`
+  },
   dashboard: "/dashboard",
   products: "/dashboard/products",
   newProduct: "/dashboard/products/new",
