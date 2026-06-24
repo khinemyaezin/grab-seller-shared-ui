@@ -1,18 +1,22 @@
 {
   "name": "grab-seller-shared-ui",
   "version": "0.1.2",
+  "packageManager": "npm@11.16.0",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace @khinemyaezin/seller-contracts && npm run build --workspace @khinemyaezin/seller-api && npm run build --workspace @khinemyaezin/seller-ui",
-    "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "release:check": "npm run build && npm run typecheck && npm test && npm_config_cache=.npm-cache npm pack --workspaces --dry-run",
     "publish:packages": "npm publish --workspace @khinemyaezin/seller-contracts && npm publish --workspace @khinemyaezin/seller-api && npm publish --workspace @khinemyaezin/seller-ui"
   },
   "engines": {
     "node": ">=20.19.0"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.18"
   }
 }
