@@ -1,5 +1,5 @@
-type EventPayloads = {
-}
+import { EventPayloads } from "@khinemyaezin/seller-contracts";
+
 export const eventBus = {
     publish<T extends Extract<keyof EventPayloads,string>>(event: T, detail: EventPayloads[T]) {
         const customEvent = new CustomEvent(event, { detail });
