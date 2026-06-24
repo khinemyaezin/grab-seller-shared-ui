@@ -6,11 +6,11 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build --workspace @khinemyaezin/seller-contracts && npm run build --workspace @khinemyaezin/seller-api && npm run build --workspace @khinemyaezin/seller-ui",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "release:check": "npm run build && npm run typecheck && npm test && npm_config_cache=.npm-cache npm pack --workspaces --dry-run",
-    "publish:packages": "npm publish --workspace @khinemyaezin/seller-api && npm publish --workspace @khinemyaezin/seller-contracts && npm publish --workspace @khinemyaezin/seller-ui"
+    "publish:packages": "npm publish --workspace @khinemyaezin/seller-contracts && npm publish --workspace @khinemyaezin/seller-api && npm publish --workspace @khinemyaezin/seller-ui"
   },
   "engines": {
     "node": ">=20.19.0"
