@@ -1,19 +1,76 @@
+import type { EventPayloads } from "./events/index.js";
+import type { SellerRuntimeConfig } from "./runtime.js";
+
 export type UserRole = "buyer" | "seller" | "admin";
 
-export type User = {
+export type SessionUser = {
   id: string;
   email: string;
   name: string;
-  role: UserRole;
   avatar?: string;
-  createdAt: string;
+};
+
+export type User = SessionUser & {
+  role?: UserRole;
+  createdAt?: string;
 };
 
 export type LoginCredentials = { email: string; password: string };
 
+export type SessionSnapshot =
+  | { status: "loading" }
+  | { status: "anonymous" }
+  | {
+      status: "authenticated";
+      user: SessionUser;
+      roles: readonly string[];
+      permissions: readonly string[];
+    };
+
+export interface SessionApi {
+  getSnapshot(): SessionSnapshot;
+  subscribe(listener: (snapshot: SessionSnapshot) => void): () => void;
+  refresh(): Promise<void>;
+  logout(): Promise<void>;
+}
+
+export interface SellerPlatform {
+  readonly version: string;
+  readonly session: SessionApi;
+  readonly events: PlatformEvents;
+  readonly navigation: PlatformNavigation;
+  readonly config: Readonly<SellerRuntimeConfig>;
+}
+
+export interface PlatformEvents {
+  publish<K extends keyof EventPayloads>(type: K, payload: EventPayloads[K]): void;
+  subscribe<K extends keyof EventPayloads>(
+    type: K,
+    handler: (payload: EventPayloads[K]) => void,
+  ): () => void;
+}
+
+export interface PlatformNavigation {
+  navigate(path: string, options?: { replace?: boolean }): void;
+}
+
+export interface MfeLifecycle<Props = Record<string, unknown>> {
+  mount(container: HTMLElement, props: MfeMountProps & Props): MfeHandle;
+}
+
+export interface MfeMountProps {
+  platform: SellerPlatform;
+  basePath: string;
+}
+
+export interface MfeHandle {
+  unmount(): void;
+  update?(props: Partial<MfeMountProps>): void;
+}
+
 export type AuthState = {
-  user: User | null;
-  token: string | null;
+  snapshot: SessionSnapshot;
+  user: SessionUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 };

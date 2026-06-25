@@ -3,17 +3,21 @@ import { removeTemplateFromUrl } from "./hateoas/link-resolver.js";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
+export type RequestBehavior = {
+  retryOnUnauthorized?: boolean;
+};
+
 type RequestOptions = {
   method?: string;
   headers?: Record<string, string>;
   body?: unknown;
-  token?: string;
   params?: Record<string, string>;
+  retryOnUnauthorized?: boolean;
 };
 
 export type ApiClientConfig = {
   baseUrl?: string;
-  getAccessToken?: () => string | null | Promise<string | null>;
+  platform?: { session: { refresh(): Promise<void> } };
 };
 
 let clientConfig: Required<Pick<ApiClientConfig, "baseUrl">> & ApiClientConfig = {
@@ -41,33 +45,31 @@ async function buildUrl(endpoint: string, params?: Record<string, string>): Prom
   return `${endpoint}?${searchParams.toString()}`;
 }
 
-async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  const { method = "GET", headers = {}, body, token: suppliedToken, params } = options
-  const token = suppliedToken ?? await clientConfig.getAccessToken?.() ?? undefined;
-
-  const url = await buildUrl(endpoint, params)
-  
-  let fullUrl = url;
-  if (!url.startsWith("http")) {
-    const base = clientConfig.baseUrl?.replace(/\/$/, "") || "";
-    const path = url.replace(/^\//, "");
-    fullUrl = path ? `${base}/${path}` : base;
-  }
-
-  const config: RequestInit = {
+function buildRequestInit({ method = "GET", headers = {}, body }: RequestOptions): RequestInit {
+  return {
     method,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/hal+json, application/problem+json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
-    ...(body ? { body: JSON.stringify(body) } : {}),
+    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
     credentials: "include",
+  };
+}
+
+async function buildFullUrl(endpoint: string, params?: Record<string, string>): Promise<string> {
+  const url = await buildUrl(endpoint, params)
+  if (url.startsWith("http")) {
+    return url;
   }
 
-  const response = await fetch(fullUrl, config)
+  const base = clientConfig.baseUrl?.replace(/\/$/, "") || "";
+  const path = url.replace(/^\//, "");
+  return path ? `${base}/${path}` : base;
+}
 
+async function readResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const data = await response.json().catch(() => null)
     throw new ApiError(response.status, response.statusText, data)
@@ -97,25 +99,68 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
   return JSON.parse(text) as T
 }
 
+async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+  const fullUrl = await buildFullUrl(endpoint, options.params)
+  const config = buildRequestInit(options)
+  const response = await fetch(fullUrl, config)
+
+  if (
+    response.status === 401 &&
+    options.retryOnUnauthorized !== false &&
+    clientConfig.platform
+  ) {
+    await clientConfig.platform.session.refresh()
+    return readResponse<T>(await fetch(fullUrl, config))
+  }
+
+  return readResponse<T>(response)
+}
+
 export const api = {
-  get: <T>(endpoint: string, params?: Record<string, string>, token?: string, headers?: Record<string, string>) =>
-    request<T>(endpoint, { params, token, headers }),
+  get: <T>(
+    endpoint: string,
+    params?: Record<string, string>,
+    headers?: Record<string, string>,
+    behavior?: RequestBehavior,
+  ) => request<T>(endpoint, { params, headers, ...behavior }),
 
-  post: <T>(endpoint: string, body: unknown, token?: string, headers?: Record<string, string>) =>
-    request<T>(endpoint, { method: "POST", body, token, headers }),
+  post: <T>(
+    endpoint: string,
+    body?: unknown,
+    headers?: Record<string, string>,
+    behavior?: RequestBehavior,
+  ) => request<T>(endpoint, { method: "POST", body, headers, ...behavior }),
 
-  put: <T>(endpoint: string, body: unknown, token?: string, headers?: Record<string, string>) =>
-    request<T>(endpoint, { method: "PUT", body, token, headers }),
+  put: <T>(
+    endpoint: string,
+    body: unknown,
+    headers?: Record<string, string>,
+    behavior?: RequestBehavior,
+  ) => request<T>(endpoint, { method: "PUT", body, headers, ...behavior }),
 
-  patch: <T>(endpoint: string, body: unknown, token?: string, headers?: Record<string, string>) =>
-    request<T>(endpoint, { method: "PATCH", body, token, headers }),
+  patch: <T>(
+    endpoint: string,
+    body: unknown,
+    headers?: Record<string, string>,
+    behavior?: RequestBehavior,
+  ) => request<T>(endpoint, { method: "PATCH", body, headers, ...behavior }),
 
-  delete: <T>(endpoint: string, token?: string, headers?: Record<string, string>) =>
-    request<T>(endpoint, { method: "DELETE", token, headers }),
+  delete: <T>(
+    endpoint: string,
+    headers?: Record<string, string>,
+    behavior?: RequestBehavior,
+  ) => request<T>(endpoint, { method: "DELETE", headers, ...behavior }),
 
-  followLink: <T>(link: HateoasLink, method: HttpMethod = "GET", body?: unknown, params?: Record<string, string>, headers?: Record<string, string>) => {
+  followLink: <T>(
+    link: HateoasLink,
+    method: HttpMethod = "GET",
+    body?: unknown,
+    params?: Record<string, string>,
+    headers?: Record<string, string>,
+    behavior?: RequestBehavior,
+  ) => {
     const href = removeTemplateFromUrl(link);
-    return request<T>(href, { method, body, params, headers });
+    return request<T>(href, { method, body, params, headers, ...behavior });
   },
 };
 
