@@ -1,7 +1,7 @@
 import type { EventPayloads } from "./events/index.js";
 import type { SellerRuntimeConfig } from "./runtime.js";
 
-export type UserRole = "buyer" | "seller" | "admin";
+export type UserRole = string;
 
 export type SessionUser = {
   id: string;
@@ -11,7 +11,6 @@ export type SessionUser = {
 };
 
 export type User = SessionUser & {
-  role?: UserRole;
   createdAt?: string;
 };
 

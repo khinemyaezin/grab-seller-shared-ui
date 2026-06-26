@@ -57,19 +57,31 @@ From the root directory, you can run the following commands across all packages 
 
 ## Publishing private packages
 
-The three packages are published together and consumed using exact semantic versions.
+The workspace uses Changesets in fixed-version mode. `@khinemyaezin/seller-contracts`, `@khinemyaezin/seller-api`, and `@khinemyaezin/seller-ui` are versioned and published together.
 
-1. Create the private `@grab` organization/scope in the npm registry and grant the release account publish access.
-2. Create an npm automation token and add it to this GitHub repository as the `NPM_TOKEN` Actions secret.
-3. Update all three package versions together. Also update the `@grab/seller-api` version used by `@grab/seller-ui`.
-4. Run `npm run release:check` locally.
-5. Run the **Publish shared packages** workflow in GitHub Actions.
-6. Add the same read-capable `NPM_TOKEN` secret to the Seller, Product, and Inventory repositories.
-7. Run `npm install` once in each consumer and commit its regenerated `package-lock.json`.
+1. Make the package changes.
+2. Run `npm run changeset`.
+3. Choose `patch`, `minor`, or `major` and write the release note.
+4. Commit the generated `.changeset/*.md` file with your code.
+5. Merge to `main`.
+6. GitHub Actions opens a version PR that updates all package versions and internal dependency versions.
+7. Merge the version PR to publish the fixed package group.
 
-For local authenticated registry access, copy `.npmrc.example` to `.npmrc` and export `NPM_TOKEN`. Never commit `.npmrc` or the token.
+Do not publish one workspace package by itself. `@khinemyaezin/seller-api` depends on `@khinemyaezin/seller-contracts`, and `@khinemyaezin/seller-ui` depends on `@khinemyaezin/seller-api`, so the release workflow keeps them in lockstep.
 
-The publish order is API, Contracts, then UI. Published versions cannot be overwritten; increase the versions before every release.
+For canary/build-number style releases, use prerelease versions instead of SemVer build metadata:
+
+```text
+1.0.1-canary.1782470000
+```
+
+Local checks before release:
+
+```bash
+npm run release:check
+```
+
+For local authenticated registry access, use the committed `.npmrc` scope registry and export a token as `NODE_AUTH_TOKEN`. Never commit a real token.
 
 ## 🧪 Testing
 We use **Vitest** for our unit and integration tests (e.g., in the API package), and **MSW** (Mock Service Worker) for API mocking. Run `npm run test` from the root to execute all workspace test suites.

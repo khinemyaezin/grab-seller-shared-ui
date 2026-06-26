@@ -1,6 +1,6 @@
 {
   "name": "@khinemyaezin/seller-api",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist"
@@ -18,7 +18,7 @@
     "test": "vitest run --exclude 'dist/**'"
   },
   "dependencies": {
-    "@khinemyaezin/seller-contracts": "^0.1.4",
+    "@khinemyaezin/seller-contracts": "1.0.0",
     "url-template": "^3.1.1"
   },
   "devDependencies": {

@@ -1,25 +1,17 @@
-name: Publish shared packages
+name: Release shared packages
 
 on:
-  workflow_dispatch:
-    inputs:
-      target_package:
-        description: 'Select the package to publish'
-        required: true
-        default: 'all'
-        type: choice
-        options:
-          - all
-          - '@khinemyaezin/seller-contracts'
-          - '@khinemyaezin/seller-api'
-          - '@khinemyaezin/seller-ui'
+  push:
+    branches:
+      - main
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
   packages: write
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,10 +33,11 @@ jobs:
       - name: Validate release
         run: npm run release:check
 
-      - name: Publish all packages
-        if: ${{ github.event.inputs.target_package == 'all' }}
-        run: npm run publish:packages
-
-      - name: Publish specific package
-        if: ${{ github.event.inputs.target_package != 'all' }}
-        run: npm publish --workspace ${{ github.event.inputs.target_package }}
+      - name: Version or publish fixed package group
+        uses: changesets/action@v1
+        with:
+          version: npm run version:packages
+          publish: npm run publish:packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
