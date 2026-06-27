@@ -61,12 +61,17 @@ function buildRequestInit({ method = "GET", headers = {}, body }: RequestOptions
 async function buildFullUrl(endpoint: string, params?: Record<string, string>): Promise<string> {
   const url = await buildUrl(endpoint, params);
   
-  if (url.startsWith("http") || url.startsWith("/")) {
+  if (url.startsWith("http")) {
     return url;
   }
 
   const base = clientConfig.baseUrl?.replace(/\/$/, "") || "";
-  return base ? `${base}/${url}` : url;
+  if (!base) {
+    return url;
+  }
+
+  const normalizedUrl = url.startsWith("/") ? url.slice(1) : url;
+  return `${base}/${normalizedUrl}`;
 }
 
 async function readResponse<T>(response: Response): Promise<T> {
