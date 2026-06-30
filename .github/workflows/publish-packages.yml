@@ -11,8 +11,9 @@ permissions:
   packages: write
 
 jobs:
-  release:
+  canary:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -33,11 +34,13 @@ jobs:
       - name: Validate release
         run: npm run release:check
 
-      - name: Version or publish fixed package group
-        uses: changesets/action@v1
-        with:
-          version: npm run version:packages
-          publish: npm run publish:packages
+      - name: Version Canary
+        run: |
+          npx changeset version --snapshot canary-${{ github.run_number }}
+          npm install --package-lock-only
+
+      - name: Publish Canary
+        run: npm run publish:canary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
