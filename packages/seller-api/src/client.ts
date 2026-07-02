@@ -18,6 +18,7 @@ type RequestOptions = {
 export type ApiClientConfig = {
   baseUrl?: string;
   platform?: { session: { refresh(): Promise<void> } };
+  getToken?: () => string | undefined | Promise<string | undefined>;
 };
 
 let clientConfig: Required<Pick<ApiClientConfig, "baseUrl">> & ApiClientConfig = {
@@ -45,12 +46,15 @@ async function buildUrl(endpoint: string, params?: Record<string, string>): Prom
   return `${endpoint}?${searchParams.toString()}`;
 }
 
-function buildRequestInit({ method = "GET", headers = {}, body }: RequestOptions): RequestInit {
+async function buildRequestInit({ method = "GET", headers = {}, body }: RequestOptions): Promise<RequestInit> {
+  const token = clientConfig.getToken ? await clientConfig.getToken() : undefined;
+  
   return {
     method,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/hal+json, application/problem+json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
@@ -106,7 +110,7 @@ async function readResponse<T>(response: Response): Promise<T> {
 
 async function request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const fullUrl = await buildFullUrl(endpoint, options.params)
-  const config = buildRequestInit(options)
+  const config = await buildRequestInit(options)
   const response = await fetch(fullUrl, config)
 
   if (
@@ -115,7 +119,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
     clientConfig.platform
   ) {
     await clientConfig.platform.session.refresh()
-    return readResponse<T>(await fetch(fullUrl, config))
+        return readResponse<T>(await fetch(fullUrl, config))
   }
 
   return readResponse<T>(response)

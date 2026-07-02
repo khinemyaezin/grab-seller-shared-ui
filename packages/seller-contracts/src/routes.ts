@@ -21,7 +21,6 @@ export const routes = {
     `/dashboard/locations/${locationId}/zones/${zoneId}/bins/new`,
   editBin: (locationId: string, zoneId: string, binId: string) => `/dashboard/locations/${locationId}/zones/${zoneId}/bins/${binId}`,
 
-  newSellerAccount: '/accounts/new',
-  sellerAccount: (sellerId:string)=> `/accounts/${sellerId}`,
-  editSellerAccount: (sellerId:string) => `/accounts/:sellerId/edit`
+  c2cOnboarding: '/c2c/welcome',
+  retailerOnboarding: '/retailer/welcome'
 } as const;

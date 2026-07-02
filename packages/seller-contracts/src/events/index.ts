@@ -3,4 +3,5 @@ export type EventPayloads = {
   "auth:logout:v1": Record<string, never>;
   "auth:session-refreshed:v1": Record<string, never>;
   "auth:session-expired:v1": Record<string, never>;
+  "seller-merchant:registration-success:v1": Record<string,never>
 };
