@@ -20,7 +20,6 @@ export const routes = {
   newBin: (locationId: string, zoneId: string) =>
     `/dashboard/locations/${locationId}/zones/${zoneId}/bins/new`,
   editBin: (locationId: string, zoneId: string, binId: string) => `/dashboard/locations/${locationId}/zones/${zoneId}/bins/${binId}`,
-
   c2cOnboarding: '/c2c/welcome',
   retailerOnboarding: '/retailer/welcome'
 } as const;
