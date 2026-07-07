@@ -1,21 +1,23 @@
 import * as React from "react"
-import { CheckIcon } from "lucide-react"
+import { CheckIcon, XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Spinner } from "@/components/ui/spinner"
 
-type ButtonStatusState = "idle" | "pending" | "success"
+type ButtonStatusState = "idle" | "pending" | "success" | "failed"
 
 type ButtonStatusProps = React.ComponentProps<"span"> & {
   status: ButtonStatusState
   pendingLabel?: React.ReactNode
   successLabel?: React.ReactNode
+  failedLabel?: React.ReactNode
 }
 
 function ButtonStatus({
   status,
   pendingLabel = "Working…",
   successLabel = "Done",
+  failedLabel = "Failed",
   children,
   className,
   ...props
@@ -64,6 +66,19 @@ function ButtonStatus({
       >
         <CheckIcon aria-hidden="true" />
         {successLabel}
+      </span>
+
+      <span
+        aria-hidden={status !== "failed"}
+        className={cn(
+          "col-start-1 row-start-1 inline-flex items-center justify-center gap-1.5",
+          status === "failed"
+            ? "visible animate-in fade-in zoom-in-75 opacity-100 duration-200 motion-reduce:animate-none text-destructive"
+            : "invisible opacity-0"
+        )}
+      >
+        <XIcon aria-hidden="true" />
+        {failedLabel}
       </span>
     </span>
   )

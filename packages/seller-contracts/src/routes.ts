@@ -2,6 +2,7 @@ export const routes = {
   home: "",
   login: "login",
   register: "register",
+  contextSelection: "contexts",
   individualOnboarding: 'individual',
-  retailerOnboarding: 'retailer'
+  retailerOnboarding: 'retailer',
 } as const;

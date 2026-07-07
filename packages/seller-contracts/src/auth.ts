@@ -3,11 +3,22 @@ import type { SellerRuntimeConfig } from "./runtime.js";
 
 export type UserRole = string;
 
+export type AccessContext = {
+  assignmentId: string;
+  platformCode: string;
+  roleCode: string;
+  scopeKey: string;
+  scopeId: string;
+  status: string;
+};
+
 export type SessionUser = {
   id: string;
   email: string;
   name: string;
   avatar?: string;
+  accessContexts: AccessContext[],
+  currentAccessContext?: AccessContext
 };
 
 export type User = SessionUser & {
