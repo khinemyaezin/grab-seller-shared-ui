@@ -1,4 +1,4 @@
-import { ref } from "./hateoas/link-ref";
+import { ref } from "./hateoas/link-ref.js";
 
 export const ModuleDiscovery = {
     "identity": ref.ROOT_INDENTITY,
