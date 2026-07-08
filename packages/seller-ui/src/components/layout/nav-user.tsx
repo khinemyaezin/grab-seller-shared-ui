@@ -92,7 +92,7 @@ export function NavUser({
             {menuItems}
             <DropdownMenuItem onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
               {resolvedTheme === "dark" ? <SunIcon className="mr-2 size-4" /> : <MoonIcon className="mr-2 size-4" />}
-              {resolvedTheme === "dark" ? "Dark" : "Light"}
+              {resolvedTheme === "dark" ? "Light" : "Dark"}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>
