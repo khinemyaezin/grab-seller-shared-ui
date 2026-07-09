@@ -1,4 +1,5 @@
 import { UserIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function UserAvatarDetails({
   avatar,
@@ -9,19 +10,12 @@ export function UserAvatarDetails({
 }) {
   return (
     <>
-      {avatar ? (
-        <img
-          src={avatar}
-          alt={email}
-          className="size-8 rounded-lg object-cover"
-        />
-      ) : (
-        <div className="flex size-8 items-center justify-center rounded-lg bg-sidebar-primary text-primary-foreground font-semibold">
-          <UserIcon className="size-4" />
-        </div>
-      )}
-      <div className="grid flex-1 text-left text-sm leading-tight ml-2">
-        <span className="truncate font-semibold">{email}</span>
+      <Avatar className="h-8 w-8 rounded-lg">
+        <AvatarImage src={avatar} alt={email} />
+        <AvatarFallback className="rounded-lg"><UserIcon/></AvatarFallback>
+      </Avatar>
+      <div className="grid flex-1 text-left text-sm leading-tight">
+        <span className="truncate">{email}</span>
       </div>
     </>
   );
