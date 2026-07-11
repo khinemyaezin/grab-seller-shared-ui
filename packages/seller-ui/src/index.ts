@@ -7,3 +7,5 @@ export { NavMain, type NavItem } from "./components/layout/nav-main.js";
 export { ThemeToggle } from "./components/layout/theme-toggle.js";
 export { UserAvatarDetails } from "./components/layout/user-avatar-details.js";
 export { NotFoundPage } from "./components/layout/not-found.js";
+export { useShellBreadcrumb } from "./hooks/use-shell-breadcrumb.js";
+export { useDebounce } from "./hooks/use-debounce.js";
