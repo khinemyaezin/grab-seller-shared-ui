@@ -104,7 +104,7 @@ function SelectLabel({
 }
 
 function SelectItem({
-  className,
+  className,  
   children,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Item>) {
