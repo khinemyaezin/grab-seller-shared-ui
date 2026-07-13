@@ -5,7 +5,7 @@ export type BreadcrumbItem = {
   to?: string;
 };
 
-export function matchShellBreadcrumbs(pathname: string): BreadcrumbItem[] {
+export function matchShellBreadcrumbs(pathname: string, replacements?: Record<string, string | null>): BreadcrumbItem[] {
   const segments = pathname.replace(/\/+$/, "").split("/").filter(Boolean);
   const crumbs: BreadcrumbItem[] = [];
   let children: RouteNode[] = routeTree;
@@ -27,9 +27,14 @@ export function matchShellBreadcrumbs(pathname: string): BreadcrumbItem[] {
       children.find((n) => n.path === segment) ??
       children.find((n) => n.path.startsWith(":"));
 
-    if (match?.label) {
-      crumbs.push({ label: match.label, to: currentPath });
-      children = match.children ?? [];
+    let label = match?.label;
+    if (match && replacements && replacements[match.path]) {
+      label = replacements[match.path] as string;
+    }
+
+    if (label) {
+      crumbs.push({ label, to: currentPath });
+      children = match?.children ?? [];
 
     } else {
       crumbs.push({ label: humanize(segment), to: currentPath });
