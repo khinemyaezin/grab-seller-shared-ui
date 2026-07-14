@@ -16,3 +16,16 @@ export function useShellBreadcrumb(leaf: string | undefined) {
     };
   }, [leaf]);
 }
+export function useShellBreadcrumbSegment(segmentPath: string, label: string | undefined) {
+  const platform = usePlatform();
+
+  useEffect(() => {
+    if (!label) return;
+
+    platform?.events.publish("shell:breadcrumb:v1", { segments: { [segmentPath]: label } });
+
+    return () => {
+      platform?.events.publish("shell:breadcrumb:v1", { segments: { [segmentPath]: null } });
+    };
+  }, [segmentPath, label]);
+}

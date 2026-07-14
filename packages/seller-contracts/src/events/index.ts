@@ -8,7 +8,8 @@ export type ToastPayload = {
 };
 
 export type ShellBreadcrumbPayload = {
-  leaf: string | null;
+  leaf?: string | null;
+  segments?: Record<string, string | null>;
 };
 
 export type EventPayloads = {
