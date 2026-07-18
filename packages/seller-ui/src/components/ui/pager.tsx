@@ -24,6 +24,7 @@ export function Pager({ className, onPageChange, ...pageInfo }: PageInfo & { cla
                 <PaginationItem>
                     <PaginationPrevious
                         href="#"
+                        text=""
                         onClick={(e) => {
                             e.preventDefault();
                             onPageChange?.(page - 1);
@@ -53,6 +54,7 @@ export function Pager({ className, onPageChange, ...pageInfo }: PageInfo & { cla
                 <PaginationItem>
                     <PaginationNext
                         href="#"
+                        text=""
                         onClick={(e) => {
                             e.preventDefault();
                             onPageChange?.(page + 1);
