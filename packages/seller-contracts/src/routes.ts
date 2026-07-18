@@ -18,35 +18,50 @@ export const routeTree: RouteNode[] = [
         ],
       },
       {
-        path: "locations",
-        label: "Locations",
+        path: "inventory",
+        label: "Inventory",
         children: [
-          { path: "new", label: "New Location" },
           {
-            path: ":locationId",
-            label: "Edit Location",
+            path: "locations",
+            label: "Locations",
             children: [
+              { path: "new", label: "New Location" },
               {
-                path: "zones",
-                label: "Zones",
+                path: ":locationId",
+                label: "Edit Location",
                 children: [
-                  { path: "new", label: "New Zone" },
                   {
-                    path: ":zoneId",
-                    label: "Edit Zone",
+                    path: "zones",
+                    label: "Zones",
                     children: [
+                      { path: "new", label: "New Zone" },
                       {
-                        path: "bins/new",
-                        label: "New Bin",
-                      },
-                      {
-                        path: "bins/:binId",
-                        label: "Edit Bin",
+                        path: ":zoneId",
+                        label: "Edit Zone",
+                        children: [
+                          {
+                            path: "bins/new",
+                            label: "New Bin",
+                          },
+                          {
+                            path: "bins/:binId",
+                            label: "Edit Bin",
+                          },
+                        ],
                       },
                     ],
                   },
                 ],
               },
+            ],
+          },
+          {
+            path: "stocks",
+            label: "Stock",
+            children: [
+              { path: "new", label: "New Stock Item" },
+              { path: "coverage", label: "Coverage" },
+              { path: ":itemId", label: "Stock Item" },
             ],
           },
         ],
@@ -65,21 +80,30 @@ export const routes = {
   login: "login",
   register: "register",
   contextSelection: "contexts",
-  individualOnboarding: 'individual',
-  retailerOnboarding: 'retailer',
+  individualOnboarding: "individual",
+  retailerOnboarding: "retailer",
 
   // Products
   products: "products",
   newProduct: "products/new",
   editProduct: (id: string) => `products/${id}`,
 
-  // Locations & Inventory
-  locations: "locations",
-  newLocation: "locations/new",
-  editLocation: (locationId: string) => `locations/${locationId}`,
-  zones: (locationId: string) => `locations/${locationId}/zones`,
-  newZone: (locationId: string) => `locations/${locationId}/zones/new`,
-  editZone: (locationId: string, zoneId: string) => `locations/${locationId}/zones/${zoneId}`,
-  newBin: (locationId: string, zoneId: string) => `locations/${locationId}/zones/${zoneId}/bins/new`,
-  editBin: (locationId: string, zoneId: string, binId: string) => `locations/${locationId}/zones/${zoneId}/bins/${binId}`,
+  // Inventory
+  inventory: "inventory",
+  locations: "inventory/locations",
+  newLocation: "inventory/locations/new",
+  editLocation: (locationId: string) => `inventory/locations/${locationId}`,
+  zones: (locationId: string) => `inventory/locations/${locationId}/zones`,
+  newZone: (locationId: string) => `inventory/locations/${locationId}/zones/new`,
+  editZone: (locationId: string, zoneId: string) =>
+    `inventory/locations/${locationId}/zones/${zoneId}`,
+  newBin: (locationId: string, zoneId: string) =>
+    `inventory/locations/${locationId}/zones/${zoneId}/bins/new`,
+  editBin: (locationId: string, zoneId: string, binId: string) =>
+    `inventory/locations/${locationId}/zones/${zoneId}/bins/${binId}`,
+
+  stock: "inventory/stocks",
+  newStockItem: "inventory/stocks/new",
+  stockItem: (itemId: string) => `inventory/stocks/${itemId}`,
+  stockCoverage: "inventory/stocks/coverage",
 } as const;

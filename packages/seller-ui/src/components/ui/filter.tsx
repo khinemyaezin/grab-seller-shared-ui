@@ -122,10 +122,7 @@ function Filter({
 
   return (
     <div
-      className={cn(
-        "grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3",
-        className
-      )}
+      className={cn(className)}
     >
       {fields.map((field) => (
         <FilterFieldControl
@@ -156,7 +153,7 @@ function FilterFieldControl({
     return (
       <Field
         orientation="horizontal"
-        className={cn("sm:items-center", field.className)}
+        className={cn("sm:items-center w-auto", field.className)}
       >
         <Checkbox
           id={controlId}
@@ -176,7 +173,7 @@ function FilterFieldControl({
   }
 
   return (
-    <Field className={cn("gap-1.5", field.className)}>
+    <Field className={cn("gap-1.5 w-auto", field.className)}>
       {field.label && (
         <FieldLabel
           htmlFor={controlId}
